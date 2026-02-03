@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkoolTek Profit Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4f46e5;
+        --primary-dark: #4338ca;
+        --secondary: #ec4899;
+        --bg-gradient-start: #f8fafc;
+        --bg-gradient-end: #e2e8f0;
+        --card-bg: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+        --shadow:
+          0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg:
+          0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start),
+          var(--bg-gradient-end)
+        );
+        color: var(--text-main);
+        min-height: 100vh;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .container {
+        max-width: 1400px;
+        width: 100%;
+        display: grid;
+        gap: 2rem;
+      }
+
+      .bottom-layout {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 2rem;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-weight: 700;
+        font-size: 2.25rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(to right, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      p.subtitle {
+        color: var(--text-muted);
+        font-size: 1.1rem;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        box-shadow: var(--shadow-lg);
+        padding: 2rem;
+        transition: transform 0.2s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+      }
+
+      .input-group {
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--text-main);
+        font-size: 1.1rem;
+      }
+
+      input[type="number"] {
+        width: 100%;
+        max-width: 300px;
+        padding: 1rem;
+        font-size: 1.5rem;
+        border: 2px solid var(--border-color);
+        border-radius: 0.75rem;
+        text-align: center;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        font-family: inherit;
+      }
+
+      input[type="number"]:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+      }
+
+      .result-section {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: linear-gradient(to right, #eff6ff, #f5f3ff);
+        border-radius: 0.75rem;
+        border: 1px solid #c7d2fe;
+      }
+
+      .result-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .result-value {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--primary);
+        line-height: 1.2;
+      }
+
+      .result-value.negative {
+        color: #ef4444;
+      }
+
+      .solution-section {
+        background-color: #f8fafc;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border-color);
+      }
+
+      h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .step {
+        font-family: "Courier New", Courier, monospace;
+        background: #ffffff;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid var(--secondary);
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+        font-weight: 600;
+        overflow-x: auto;
+      }
+
+      .fraction {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        vertical-align: middle;
+        margin: 0 0.25rem;
+      }
+
+      .fraction .numerator {
+        border-bottom: 2px solid var(--text-main);
+        padding: 0.1rem 0.5rem;
+      }
+
+      .fraction .denominator {
+        padding: 0.1rem 0.5rem;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        border-radius: 0.75rem;
+        border: 1px solid var(--border-color);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      th {
+        background-color: #f1f5f9;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr.highlight-row {
+        background-color: #e0e7ff;
+        font-weight: 600;
+      }
+
+      tr.highlight-row td {
+        color: var(--primary-dark);
+      }
+
+      td.negative {
+        color: #ef4444;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>SkoolTek Profit Calculator</h1>
+        <p class="subtitle">B2B Marketing Profit Model</p>
+      </header>
+
+      <div class="card">
+        <!-- 1. Number of Schools at top -->
+        <div
+          class="input-group"
+          style="text-align: center; max-width: 300px; margin: 0 auto 1.5rem"
+        >
+          <label for="schoolsInput">Number of Schools Acquired (x)</label>
+          <input
+            type="number"
+            id="schoolsInput"
+            value="1"
+            min="0"
+            oninput="calculate()"
+          />
+        </div>
+
+        <!-- 2. Fixed Marketing Expense below -->
+        <div
+          class="input-group"
+          style="text-align: center; max-width: 300px; margin: 0 auto 1.5rem"
+        >
+          <label for="fixedExpenseInput"
+            >Fixed Marketing Expense (Monthly)</label
+          >
+          <input
+            type="number"
+            id="fixedExpenseInput"
+            value="50000"
+            step="0.01"
+            oninput="calculate()"
+          />
+        </div>
+
+        <!-- 3. Price per Student and Students per School in middle -->
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+          "
+        >
+          <div class="input-group">
+            <label for="priceInput">Price per Student</label>
+            <input
+              type="number"
+              id="priceInput"
+              value="1000"
+              step="1"
+              oninput="calculate()"
+            />
+          </div>
+          <div class="input-group">
+            <label for="studentsInput">Students per School</label>
+            <input
+              type="number"
+              id="studentsInput"
+              value="500"
+              step="1"
+              oninput="calculate()"
+            />
+          </div>
+        </div>
+
+        <!-- 4. CPC Sources at bottom -->
+        <div style="max-width: 500px; margin: 0 auto">
+          <label
+            style="
+              font-size: 0.9rem;
+              display: block;
+              margin-bottom: 0.5rem;
+              text-align: center;
+            "
+            >CPC Sources</label
+          >
+          <div
+            id="cpcContainer"
+            style="display: flex; flex-direction: column; gap: 0.5rem"
+          >
+            <div
+              class="cpc-row"
+              style="display: flex; gap: 0.5rem; align-items: center"
+            >
+              <input
+                type="text"
+                class="cpc-name"
+                value="Facebook"
+                style="
+                  flex: 1;
+                  padding: 0.5rem;
+                  border: 2px solid var(--border-color);
+                  border-radius: 0.5rem;
+                  font-size: 0.9rem;
+                "
+              />
+              <input
+                type="number"
+                class="cpc-value"
+                value="105.28"
+                step="0.01"
+                oninput="calculate()"
+                style="width: 100px; padding: 0.5rem"
+              />
+              <button
+                type="button"
+                onclick="removeCpc(this)"
+                style="
+                  background: #ef4444;
+                  color: white;
+                  border: none;
+                  border-radius: 0.5rem;
+                  padding: 0.3rem 0.5rem;
+                  cursor: pointer;
+                  font-weight: 600;
+                "
+              >
+                ×
+              </button>
+            </div>
+            <div
+              class="cpc-row"
+              style="display: flex; gap: 0.5rem; align-items: center"
+            >
+              <input
+                type="text"
+                class="cpc-name"
+                value="LinkedIn"
+                style="
+                  flex: 1;
+                  padding: 0.5rem;
+                  border: 2px solid var(--border-color);
+                  border-radius: 0.5rem;
+                  font-size: 0.9rem;
+                "
+              />
+              <input
+                type="number"
+                class="cpc-value"
+                value="130.18"
+                step="0.01"
+                oninput="calculate()"
+                style="width: 100px; padding: 0.5rem"
+              />
+              <button
+                type="button"
+                onclick="removeCpc(this)"
+                style="
+                  background: #ef4444;
+                  color: white;
+                  border: none;
+                  border-radius: 0.5rem;
+                  padding: 0.3rem 0.5rem;
+                  cursor: pointer;
+                  font-weight: 600;
+                "
+              >
+                ×
+              </button>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: 0.5rem">
+            <button
+              type="button"
+              onclick="addCpc()"
+              style="
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 0.5rem;
+                padding: 0.4rem 0.75rem;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 0.85rem;
+              "
+            >
+              + Add CPC
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Display -->
+      <div class="result-section">
+        <div class="result-label">Monthly Marketing Profit f(x)</div>
+        <div class="result-value" id="resultValue">₱0.00</div>
+      </div>
+
+      <!-- BOTTOM SECTION: Solution and Table side by side -->
+      <div class="bottom-layout">
+        <div class="card">
+          <div class="solution-section">
+            <h2>Solution Steps</h2>
+            <div id="solutionSteps">
+              <!-- Steps will be injected here -->
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-section">
+            <h2>Value Table</h2>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Schools Acquired (x)</th>
+                    <th>Profit f(x)</th>
+                  </tr>
+                </thead>
+                <tbody id="valueTableBody">
+                  <!-- Table rows will be injected here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const schoolsInput = document.getElementById("schoolsInput");
+      const priceInput = document.getElementById("priceInput");
+      const studentsInput = document.getElementById("studentsInput");
+      const cpcContainer = document.getElementById("cpcContainer");
+      const fixedExpenseInput = document.getElementById("fixedExpenseInput");
+      const resultValue = document.getElementById("resultValue");
+      const solutionSteps = document.getElementById("solutionSteps");
+      const valueTableBody = document.getElementById("valueTableBody");
+
+      // Currency Formatter (Peso)
+      const pesoFormatter = new Intl.NumberFormat("en-PH", {
+        style: "currency",
+        currency: "PHP",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      const numberFormatter = new Intl.NumberFormat("en-US");
+
+      function calculateProfit(x, monthlyContribution, fixed) {
+        return monthlyContribution * x - fixed;
+      }
+
+      function getCpcValues() {
+        const rows = cpcContainer.querySelectorAll(".cpc-row");
+        const cpcList = [];
+        rows.forEach((row) => {
+          const name = row.querySelector(".cpc-name").value || "Unknown";
+          const value = parseFloat(row.querySelector(".cpc-value").value) || 0;
+          cpcList.push({ name, value });
+        });
+        return cpcList;
+      }
+
+      function addCpc() {
+        const row = document.createElement("div");
+        row.className = "cpc-row";
+        row.style = "display: flex; gap: 0.5rem; align-items: center;";
+        row.innerHTML = `
+          <input type="text" class="cpc-name" value="New Source" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 0.5rem; font-size: 1rem;">
+          <input type="number" class="cpc-value" value="0" step="0.01" oninput="calculate()" style="flex: 1;">
+          <button type="button" onclick="removeCpc(this)" style="background: #ef4444; color: white; border: none; border-radius: 0.5rem; padding: 0.5rem 0.75rem; cursor: pointer; font-weight: 600;">×</button>
+        `;
+        cpcContainer.appendChild(row);
+        calculate();
+      }
+
+      function removeCpc(btn) {
+        const row = btn.parentElement;
+        if (cpcContainer.querySelectorAll(".cpc-row").length > 1) {
+          row.remove();
+          calculate();
+        }
+      }
+
+      function calculate() {
+        let x = parseInt(schoolsInput.value);
+        let price = parseFloat(priceInput.value);
+        let students = parseFloat(studentsInput.value);
+        const cpcList = getCpcValues();
+        let fixed = parseFloat(fixedExpenseInput.value);
+
+        if (isNaN(x)) x = 0;
+        if (isNaN(price)) price = 0;
+        if (isNaN(students)) students = 0;
+        if (isNaN(fixed)) fixed = 0;
+
+        // Intermediate Calculations
+        const revenuePerSchool = price * students;
+        const cpcSum = cpcList.reduce((sum, c) => sum + c.value, 0);
+        const blendedCpc = cpcList.length > 0 ? cpcSum / cpcList.length : 0;
+        const clicksPerSchool = 1000; // Fixed from assumptions
+        const cacPerSchool = clicksPerSchool * blendedCpc;
+        const annualContribution = revenuePerSchool - cacPerSchool;
+        const monthlyContribution = annualContribution / 12;
+
+        // Build CPC formula string
+        const cpcFormula = cpcList.map((c) => c.value).join(" + ");
+        const cpcNames = cpcList.map((c) => c.name).join(", ");
+
+        const profit = calculateProfit(x, monthlyContribution, fixed);
+
+        // Update Result Display
+        resultValue.textContent = pesoFormatter.format(profit);
+        if (profit < 0) {
+          resultValue.classList.add("negative");
+        } else {
+          resultValue.classList.remove("negative");
+        }
+
+        // Update Solution
+        solutionSteps.innerHTML = `
+
+                <div class="step" style="font-size: 0.9rem; color: var(--text-muted);">
+                    Revenue per School = ${numberFormatter.format(students)} students × ${pesoFormatter.format(price)}/student = ${pesoFormatter.format(revenuePerSchool)}<br>
+                    Clicks per School = <span class="fraction"><span class="numerator">1</span><span class="denominator">5% × 20% × 10%</span></span> = ${numberFormatter.format(clicksPerSchool)} clicks<br>
+                    Blended CPC = <span class="fraction"><span class="numerator">${cpcFormula}</span><span class="denominator">${cpcList.length}</span></span> = ${pesoFormatter.format(blendedCpc)}<br>
+                    CAC per School = ${numberFormatter.format(clicksPerSchool)} clicks × ${pesoFormatter.format(blendedCpc)}/click = ${pesoFormatter.format(cacPerSchool)}<br>
+                    Annual Contrib. = ${pesoFormatter.format(revenuePerSchool)} - ${pesoFormatter.format(cacPerSchool)} = ${pesoFormatter.format(annualContribution)}<br>
+                    Monthly Contrib. = <span class="fraction"><span class="numerator">${pesoFormatter.format(annualContribution)}</span><span class="denominator">12</span></span> = ${pesoFormatter.format(monthlyContribution)}
+                </div>
+                <div class="step">f(x) = <span class="fraction"><span class="numerator">Revenue - CAC</span><span class="denominator">12</span></span>x - Fixed Expense</div>
+                <div class="step">f(x) = <span class="fraction"><span class="numerator">${pesoFormatter.format(revenuePerSchool)} - ${pesoFormatter.format(cacPerSchool)}</span><span class="denominator">12</span></span>x - ${pesoFormatter.format(fixed)}</div>
+                <div class="step">f(x) = <span class="fraction"><span class="numerator">${pesoFormatter.format(annualContribution)}</span><span class="denominator">12</span></span>x - ${pesoFormatter.format(fixed)}</div>
+                <div class="step">f(x) = ${pesoFormatter.format(monthlyContribution)}x - ${pesoFormatter.format(fixed)}</div>
+                <div class="step">f(${x}) = (${pesoFormatter.format(monthlyContribution)} × ${x}) - ${pesoFormatter.format(fixed)}</div>
+                <div class="step">f(${x}) = ${pesoFormatter.format(profit)}</div>
+            `;
+
+        // Update Table
+        updateTable(x, monthlyContribution, fixed);
+      }
+
+      function updateTable(currentX, monthlyContribution, fixed) {
+        valueTableBody.innerHTML = "";
+
+        // Show range around current X, but always include some context
+        let startX = Math.max(0, currentX - 2);
+        let endX = startX + 5; // Show 6 rows total
+
+        if (startX === 0) endX = 5;
+
+        for (let i = startX; i <= endX; i++) {
+          const profit = calculateProfit(i, monthlyContribution, fixed);
+          const row = document.createElement("tr");
+          if (i === currentX) {
+            row.classList.add("highlight-row");
+          }
+
+          const profitClass = profit < 0 ? "negative" : "";
+
+          row.innerHTML = `
+                    <td>${i}</td>
+                    <td class="${profitClass}">${pesoFormatter.format(profit)}</td>
+                `;
+          valueTableBody.appendChild(row);
+        }
+      }
+
+      // Initial Calculation
+      calculate();
+    </script>
+  </body>
+</html>
