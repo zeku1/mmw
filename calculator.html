@@ -352,7 +352,13 @@
                 value="105.28"
                 step="0.01"
                 oninput="calculate()"
-                style="width: 100px; padding: 0.5rem"
+                style="
+                  width: 120px;
+                  padding: 0.5rem;
+                  border: 2px solid var(--border-color);
+                  border-radius: 0.5rem;
+                  font-size: 0.9rem;
+                "
               />
               <button
                 type="button"
@@ -392,7 +398,13 @@
                 value="130.18"
                 step="0.01"
                 oninput="calculate()"
-                style="width: 100px; padding: 0.5rem"
+                style="
+                  width: 120px;
+                  padding: 0.5rem;
+                  border: 2px solid var(--border-color);
+                  border-radius: 0.5rem;
+                  font-size: 0.9rem;
+                "
               />
               <button
                 type="button"
@@ -510,8 +522,8 @@
         row.className = "cpc-row";
         row.style = "display: flex; gap: 0.5rem; align-items: center;";
         row.innerHTML = `
-          <input type="text" class="cpc-name" value="New Source" style="flex: 1; padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 0.5rem; font-size: 1rem;">
-          <input type="number" class="cpc-value" value="0" step="0.01" oninput="calculate()" style="flex: 1;">
+          <input type="text" class="cpc-name" value="New Source" style="flex: 1; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 0.5rem; font-size: 0.9rem;">
+          <input type="number" class="cpc-value" value="0" step="0.01" oninput="calculate()" style="width: 120px; padding: 0.5rem; border: 2px solid var(--border-color); border-radius: 0.5rem; font-size: 0.9rem;">
           <button type="button" onclick="removeCpc(this)" style="background: #ef4444; color: white; border: none; border-radius: 0.5rem; padding: 0.5rem 0.75rem; cursor: pointer; font-weight: 600;">×</button>
         `;
         cpcContainer.appendChild(row);
@@ -576,8 +588,8 @@
                 <div class="step">f(x) = <span class="fraction"><span class="numerator">${pesoFormatter.format(revenuePerSchool)} - ${pesoFormatter.format(cacPerSchool)}</span><span class="denominator">12</span></span>x - ${pesoFormatter.format(fixed)}</div>
                 <div class="step">f(x) = <span class="fraction"><span class="numerator">${pesoFormatter.format(annualContribution)}</span><span class="denominator">12</span></span>x - ${pesoFormatter.format(fixed)}</div>
                 <div class="step">f(x) = ${pesoFormatter.format(monthlyContribution)}x - ${pesoFormatter.format(fixed)}</div>
-                <div class="step">f(${x}) = (${pesoFormatter.format(monthlyContribution)} × ${x}) - ${pesoFormatter.format(fixed)}</div>
-                <div class="step">f(${x}) = ${pesoFormatter.format(profit)}</div>
+                <div class="step">f(x) = (${pesoFormatter.format(monthlyContribution)} × ${x}) - ${pesoFormatter.format(fixed)}</div>
+                <div class="step">f(x) = ${pesoFormatter.format(profit)}</div>
             `;
 
         // Update Table
